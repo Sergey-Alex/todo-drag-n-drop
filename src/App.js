@@ -44,16 +44,16 @@ export default function App() {
             onChange={e =>setItem(e.target.value)}
         />
         <button className='enter' onClick={newItem}>ENTER</button>
-          {items.map((item, index => {
+          {items.map((item, index) => {
               return (
                   <Draggable key = {index} defaultPosition = {item.defaultPos}>
-                      <div className='todo__item'>
+                      <div className='todo__item' style ={{backgroundColor: item.color}}>
                           {`${item.item}`}
                           <button className='delete'>X</button>
                       </div>
                   </Draggable>
               )
-          }))}
+          })}
       </div>
       </div>
 
