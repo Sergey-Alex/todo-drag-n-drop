@@ -15,8 +15,8 @@ export default function App() {
     }, [items])
 
     const newItem = () => {
-        if (!item.trim() !== ''){
-            const newItem = {
+        if (item.trim() !== ''){
+            let newItem = {
                 id: v4(),
                 item: item,
                 color: randomColor({
@@ -28,10 +28,29 @@ export default function App() {
                 }
             }
 
-            setItems(items => [...items, newItem])
+            setItems((items) => [...items, newItem])
             setItem('')
         } else {
             alert('Enter something')
+            setItem('')
+        }
+    }
+
+  const deleteNote = (id) => {
+
+      setItems([...items].filter(item => item.id !== id))
+    }
+
+    const updatePos = (data, index) =>{
+        let newArr = [...items]
+        newArr[index].defaultPos = {x:data.x, y:data.y}
+        setItems(newArr)
+    }
+
+    const keyPress = (e) => {
+        const code = e.keyCode || e.which
+        if (code === 13) {
+            newItem()
         }
     }
 
@@ -39,17 +58,27 @@ export default function App() {
     <div className='App'>
       <div className="wrapper">
         <input
+            value={item}
             type="text"
             placeholder='Enter something'
             onChange={e =>setItem(e.target.value)}
+            onKeyPress={e => keyPress(e)}
         />
-        <button className='enter' onClick={newItem}>ENTER</button>
+        <button className='enter'
+                onClick={newItem}
+        >ENTER</button>
           {items.map((item, index) => {
               return (
-                  <Draggable key = {index} defaultPosition = {item.defaultPos}>
+                  <Draggable
+                      key = {index}
+                      defaultPosition = {item.defaultPos}
+                      onStop = {(_, data) => {
+                          updatePos(data, index)
+                  }}
+                  >
                       <div className='todo__item' style ={{backgroundColor: item.color}}>
                           {`${item.item}`}
-                          <button className='delete'>X</button>
+                          <button className='delete' onClick={()=> deleteNote(item.id)}>X</button>
                       </div>
                   </Draggable>
               )
